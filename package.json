@@ -15,9 +15,13 @@
     "e2e": "nx e2e integration"
   },
   "private": true,
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jmcdo29/nest-commander.git"
+    "url": "git+https://github.com/jmcdo29/nest-commander.git",
+    "directory": "packages/nest-commander"
   },
   "keywords": [
     "cli",
