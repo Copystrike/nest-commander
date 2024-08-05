@@ -15,6 +15,7 @@ import {
   CommandMeta,
   DefaultMeta,
   HelpMeta,
+  HookMeta,
   MessageMeta,
   OptionChoiceMeta,
   OptionMeta,
@@ -26,6 +27,8 @@ import {
   ValidateMeta,
   WhenMeta,
 } from './constants';
+
+import { HookEvent } from 'commander';
 
 type CommandDecorator = <TFunction extends Type<CommandRunner>>(
   target: TFunction,
@@ -114,6 +117,10 @@ export const DefaultFor = (options: QuestionNameMetadata): MethodDecorator => {
 
 export const Help = (options: HelpOptions): MethodDecorator => {
   return applyMethodMetadata(options, HelpMeta);
+};
+
+export const Hook = (type: HookEvent) => {
+  return applyMethodMetadata(type, HookMeta);
 };
 
 export const InjectCommander = () => Inject(Commander);

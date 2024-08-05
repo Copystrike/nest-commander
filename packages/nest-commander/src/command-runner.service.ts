@@ -9,6 +9,7 @@ import {
   CommandMetadata,
   CommandRunner,
   HelpOptions,
+  HookMetadata,
   OptionChoiceForMetadata,
   OptionMetadata,
   RootCommandMetadata,
@@ -19,12 +20,15 @@ import {
   CommanderOptions,
   CommandMeta,
   HelpMeta,
+  HookMeta,
   OptionChoiceMeta,
   OptionMeta,
   RootCommandMeta,
   SubCommandMeta,
 } from './constants';
 import { InjectCommander } from './command.decorators';
+
+import { type HookEvent } from 'commander';
 
 export class CommandRunnerService implements OnModuleInit {
   private subCommands?: DiscoveredClassWithMeta<CommandMetadata>[];
@@ -114,11 +118,17 @@ ${cliPluginError(
           HelpMeta,
           (found) => found.name === provider.discoveredClass.name,
         );
+      const hookProviders =
+        await this.discoveryService.providerMethodsWithMetaAtKey<HookMetadata>(
+          HookMeta,
+          (found) => found.name === provider.discoveredClass.name,
+        );
       commands.push({
         command: provider.meta,
         instance: provider.discoveredClass.instance as CommandRunner,
         params: optionProviders,
         help: helpProviders,
+        hooks: hookProviders,
       });
     }
     return commands;
@@ -208,6 +218,16 @@ ${cliPluginError(
         help.discoveredMethod.handler.bind(command.instance),
       );
     }
+    for (const hook of command.hooks ?? []) {
+      newCommand.hook(hook.meta.event, (thisCommand, actionCommand) => {
+        hook.discoveredMethod.handler.call(
+          command.instance,
+          thisCommand,
+          actionCommand,
+        );
+      });
+    }
+
     command.command.aliases?.forEach((alias) => newCommand.alias(alias));
     newCommand.action(async () => {
       try {

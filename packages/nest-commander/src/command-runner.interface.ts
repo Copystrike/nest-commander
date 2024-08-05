@@ -1,6 +1,6 @@
 import { DiscoveredMethodWithMeta } from '@golevelup/nestjs-discovery';
 import { ClassProvider, Type } from '@nestjs/common';
-import { Command, CommandOptions } from 'commander';
+import { Command, CommandOptions, HookEvent } from 'commander';
 import type {
   CheckboxQuestion,
   ConfirmQuestion,
@@ -76,6 +76,10 @@ export interface OptionMetadata {
   env?: string;
 }
 
+export interface HookMetadata {
+  event: HookEvent;
+}
+
 export interface OptionChoiceForMetadata {
   name: string;
 }
@@ -85,6 +89,7 @@ export interface RunnerMeta {
   command: RootCommandMetadata;
   params: DiscoveredMethodWithMeta<OptionMetadata>[];
   help?: DiscoveredMethodWithMeta<HelpOptions>[];
+  hooks?: DiscoveredMethodWithMeta<HookMetadata>[];
 }
 
 export interface QuestionNameMetadata {

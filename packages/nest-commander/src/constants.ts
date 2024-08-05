@@ -23,6 +23,8 @@ export const Commander = Symbol('Commander');
 export const CommanderOptions = Symbol('CommanderOptions');
 export const Inquirer = Symbol('Inquirer');
 export const HelpMeta = metaKeyBuilder('Command:Help');
+export const HookMeta = metaKeyBuilder('Command:Hook');
+
 export const cliPluginError = (
   cliName = 'nest-commander',
   pluginsAvailable = true,
